@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>скибиди — кнопка показать/скрыть</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
+            font-family: system-ui, 'Segoe UI', sans-serif;
+            gap: 2rem;
+            padding: 20px;
+        }
+
+        /* Главная надпись */
+        h1 {
+            font-size: clamp(3rem, 12vw, 8rem);
+            font-weight: 800;
+            color: #1e2a3e;
+            text-shadow: 4px 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        /* Кнопка */
+        button {
+            background: #1e2a3e;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            border-radius: 60px;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.1s ease, background 0.2s ease;
+        }
+
+        button:hover {
+            background: #2d3e57;
+            transform: scale(1.02);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Анимация для плавного появления/исчезновения */
+        .visible {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.2s ease, visibility 0s linear 0s;
+        }
+
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="skibidiText" class="visible">скибиди</h1>
+
+    <button id="toggleButton">спрятать</button>
+
+    <script>
+        // Находим элементы на странице
+        const textElement = document.getElementById('skibidiText');
+        const button = document.getElementById('toggleButton');
+
+        // Переменная для отслеживания состояния (видно или нет)
+        let isVisible = true;
+
+        // Функция, которая переключает видимость
+        function toggleText() {
+            if (isVisible) {
+                // Если видно — прячем
+                textElement.classList.remove('visible');
+                textElement.classList.add('hidden');
+                button.textContent = 'показать';
+                isVisible = false;
+            } else {
+                // Если скрыто — показываем
+                textElement.classList.remove('hidden');
+                textElement.classList.add('visible');
+                button.textContent = 'спрятать';
+                isVisible = true;
+            }
+        }
+
+        // Вешаем обработчик на кнопку
+        button.addEventListener('click', toggleText);
+    </script>
+</body>
+</html>
