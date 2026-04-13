@@ -1,9 +1,11 @@
+Вот сайт-квест с проверкой ответов. Настя вводит найденные в реальной жизни слова, получает подсказки и в финале — ваше поздравление.
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>скибиди — кнопка показать/скрыть</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Квест на день рождения Насти</title>
     <style>
         * {
             margin: 0;
@@ -13,97 +15,573 @@
 
         body {
             min-height: 100vh;
+            background: linear-gradient(145deg, #f9e7b3 0%, #f5c6a0 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Dancing Script', system-ui, sans-serif;
+            padding: 30px 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
-            font-family: system-ui, 'Segoe UI', sans-serif;
-            gap: 2rem;
-            padding: 20px;
+            align-items: center;
         }
 
-        /* Главная надпись */
+        /* Главная карточка квеста */
+        .quest-container {
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 248, 235, 0.95);
+            border-radius: 64px;
+            padding: 30px 28px 40px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.2), 0 0 0 12px #fff9ef;
+            backdrop-filter: blur(2px);
+            transition: all 0.2s;
+        }
+
         h1 {
-            font-size: clamp(3rem, 12vw, 8rem);
+            font-size: 2.4rem;
+            text-align: center;
+            color: #c43a2b;
             font-weight: 800;
-            color: #1e2a3e;
-            text-shadow: 4px 4px 12px rgba(0,0,0,0.1);
-            transition: all 0.2s ease;
-            user-select: none;
+            letter-spacing: 2px;
+            word-break: keep-all;
+            margin-bottom: 8px;
+            font-family: 'Dancing Script', cursive;
+            text-shadow: 2px 2px 0 #ffe0b5;
         }
 
-        /* Кнопка */
-        button {
-            background: #1e2a3e;
-            border: none;
-            padding: 14px 32px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: white;
+        .sub {
+            text-align: center;
+            color: #b45f2b;
+            font-size: 1rem;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed #ffcd94;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 8px;
+        }
+
+        /* Блок для каждого вопроса */
+        .question-card {
+            background: #fff5e8;
+            border-radius: 48px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+            border: 1px solid #ffdead;
+        }
+
+        .question-text {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #a0341e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .question-emoji {
+            font-size: 2rem;
+        }
+
+        .question-desc {
+            color: #7a4316;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            font-style: italic;
+            background: #ffefdb;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+        }
+
+        .input-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin: 12px 0 8px;
+        }
+
+        .answer-input {
+            flex: 3;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: 2px solid #ffcf9a;
             border-radius: 60px;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: transform 0.1s ease, background 0.2s ease;
+            outline: none;
+            font-family: monospace;
+            background: #fffef7;
+            transition: 0.2s;
         }
 
-        button:hover {
-            background: #2d3e57;
-            transform: scale(1.02);
+        .answer-input:focus {
+            border-color: #f08c4e;
+            box-shadow: 0 0 0 3px rgba(240,140,78,0.2);
+        }
+
+        .check-btn {
+            background: #f4a261;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: bold;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .check-btn:hover {
+            background: #e76f51;
+            transform: scale(0.97);
+        }
+
+        .hint-box {
+            background: #e9f5e1;
+            border-radius: 28px;
+            padding: 12px 18px;
+            margin-top: 15px;
+            color: #2c6e2f;
+            font-weight: 500;
+            border-left: 8px solid #6fbf4c;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .hint-locked {
+            filter: blur(4px);
+            background: #f0e2d4;
+            color: #7c5d42;
+            user-select: none;
+            pointer-events: none;
+            font-style: italic;
+        }
+
+        .hint-unlocked {
+            filter: blur(0);
+            background: #d9f0ca;
+            font-weight: 600;
+            color: #1f5420;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            background: #ffedd5;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 60px;
+            margin-left: 12px;
+        }
+
+        .congrats-final {
+            background: linear-gradient(135deg, #ffd966, #ffb347);
+            text-align: center;
+            padding: 24px;
+            border-radius: 56px;
+            margin-top: 32px;
+            color: #522e1a;
+            font-weight: bold;
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .hidden-final {
+            display: none;
+        }
+
+        .congrats-final h3 {
+            font-size: 2rem;
+            font-family: 'Dancing Script', cursive;
+            margin-bottom: 10px;
+        }
+
+        .congrats-final p {
+            font-size: 1.2rem;
+        }
+
+        .final-visible {
+            display: block;
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(0.9); opacity: 0; }
+            80% { transform: scale(1.02); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         button:active {
-            transform: scale(0.98);
+            transform: scale(0.96);
         }
 
-        /* Анимация для плавного появления/исчезновения */
-        .visible {
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 0.2s ease, visibility 0s linear 0s;
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            margin-top: 25px;
+            color: #b87c4a;
         }
 
-        .hidden {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+        @media (max-width: 550px) {
+            .quest-container {
+                padding: 20px 18px;
+            }
+            .question-text {
+                font-size: 1.2rem;
+            }
+            .input-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .check-btn {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
+<div class="quest-container" id="app">
+    <h1>🎂 С Днём Рождения, Настя! 🎉</h1>
+    <div style="text-align: center;">
+        <span class="sub">✨ квест с секретами реального мира ✨</span>
+    </div>
 
-    <h1 id="skibidiText" class="visible">скибиди</h1>
+    <!-- Динамические вопросы будут загружены сюда -->
+    <div id="questionsList"></div>
 
-    <button id="toggleButton">спрятать</button>
+    <!-- Финальный блок с поздравлением (скрыт по умолчанию) -->
+    <div id="finalMessage" class="congrats-final hidden-final">
+        <h3>🎁 Поздравляю, Настя! 🎁</h3>
+        <p>Ты разгадала все загадки и собрала все подсказки! <br>
+        🌟 Ты самая внимательная и удивительная! 🌟<br>
+        💖 Желаю море счастья, исполнения желаний и ярких открытий! 💖<br>
+        🥳 Обнимаю и поздравляю с днём рождения! 🥳</p>
+        <span style="font-size:2rem;">🎂🎈🎀</span>
+    </div>
+    <footer>🔍 Ответы нужно найти в реальной жизни (спроси у друзей, родителей или вспомни наши секретики)</footer>
+</div>
 
-    <script>
-        // Находим элементы на странице
-        const textElement = document.getElementById('skibidiText');
-        const button = document.getElementById('toggleButton');
+<script>
+    // ---------- ЗАДАЙ ВОПРОСЫ И ПРАВИЛЬНЫЕ ОТВЕТЫ ЗДЕСЬ ----------
+    // ВАЖНО: ответы вписывай строчными буквами, можно с цифрами и знаками.
+    // Настя должна найти эти слова/числа в реальном мире (подсказки, записки, устные ответы)
+    const quests = [
+        {
+            id: 1,
+            emoji: "🐱",
+            question: "Моё любимое домашнее животное? (кто живёт дома, мурлыкает)",
+            hintLocked: "🔒 Подсказка откроется, когда введешь правильный ответ: Это пушистое создание любит спать на подоконнике...",
+            hintUnlocked: "🔓 ПОДСКАЗКА №1: Загляни под коврик у входной двери — там лежит маленький конверт с первой частью секретного послания! (или спроси у мамы про 'сладкий сюрприз')",
+            correctAnswer: "кошка"     // например, если у Насти кошка
+        },
+        {
+            id: 2,
+            emoji: "📅",
+            question: "Число моего рождения? (две цифры)",
+            hintLocked: "🔒 Верное число откроет подсказку: это дата, которую мы всегда отмечаем вместе...",
+            hintUnlocked: "🔓 ПОДСКАЗКА №2: Вспомни нашу любимую пиццерию. За стойкой спроси у администратора 'счастливый купон' — там записка, где лежит следующая зацепка!",
+            correctAnswer: "14"       // пример, если день рождения 14-го, измени на реальное число
+        },
+        {
+            id: 3,
+            emoji: "🍕",
+            question: "Наша самая любимая еда, которую мы заказывали в прошлую пятницу? (одно слово)",
+            hintLocked: "🔒 Вкусный ответ подарит тебе подсказку...",
+            hintUnlocked: "🔓 ПОДСКАЗКА №3: Посмотри в коробке с зарядками (в ящике тумбочки) — там лежит маленькая открытка. На ней написано место, где спрятан финальный сюрприз!",
+            correctAnswer: "пицца"
+        }
+    ];
 
-        // Переменная для отслеживания состояния (видно или нет)
-        let isVisible = true;
+    // Храним состояние каждого вопроса (разблокирована ли подсказка)
+    let hintsUnlocked = {};
+    // Счётчик открытых подсказок для финала (когда все три подсказки открыты → показываем поздравление)
+    let unlockedCount = 0;
+    // Общее количество вопросов
+    const totalQuests = quests.length;
 
-        // Функция, которая переключает видимость
-        function toggleText() {
-            if (isVisible) {
-                // Если видно — прячем
-                textElement.classList.remove('visible');
-                textElement.classList.add('hidden');
-                button.textContent = 'показать';
-                isVisible = false;
+    // Функция сохранения прогресса в localStorage (чтобы при перезагрузке страницы подсказки не сбрасывались)
+    function saveProgress() {
+        localStorage.setItem('nastya_birthday_hints', JSON.stringify(hintsUnlocked));
+        localStorage.setItem('nastya_unlocked_count', unlockedCount);
+    }
+
+    // Функция загрузки прогресса
+    function loadProgress() {
+        const saved = localStorage.getItem('nastya_birthday_hints');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                hintsUnlocked = parsed;
+                // пересчитаем unlockedCount заново на основе загруженных данных
+                let count = 0;
+                for (let i = 0; i < totalQuests; i++) {
+                    if (hintsUnlocked[i] === true) count++;
+                }
+                unlockedCount = count;
+                localStorage.setItem('nastya_unlocked_count', unlockedCount);
+            } catch(e) { console.warn(e); }
+        } else {
+            // Инициализация: все подсказки заперты
+            for (let i = 0; i < totalQuests; i++) {
+                hintsUnlocked[i] = false;
+            }
+            unlockedCount = 0;
+            saveProgress();
+        }
+        const savedCount = localStorage.getItem('nastya_unlocked_count');
+        if(savedCount && !isNaN(parseInt(savedCount))) {
+            unlockedCount = parseInt(savedCount);
+        }
+        // синхронизация на случай несоответствия
+        let realCount = 0;
+        for (let i=0; i<totalQuests; i++) {
+            if(hintsUnlocked[i]) realCount++;
+        }
+        if(realCount !== unlockedCount) {
+            unlockedCount = realCount;
+            saveProgress();
+        }
+    }
+
+    // Функция проверки конкретного ответа
+    function checkAnswer(questId, inputElement, hintDivId, btnElement) {
+        const questIndex = questId - 1; // массив с 0
+        const quest = quests[questIndex];
+        const userAnswer = inputElement.value.trim().toLowerCase();
+        const correct = quest.correctAnswer.toLowerCase();
+
+        if (userAnswer === correct) {
+            // Если ответ правильный и подсказка еще не открыта
+            if (!hintsUnlocked[questIndex]) {
+                // Открываем подсказку
+                hintsUnlocked[questIndex] = true;
+                unlockedCount++;
+                saveProgress();
+
+                // Обновляем интерфейс: показываем разблокированную подсказку
+                const hintContainer = document.getElementById(hintDivId);
+                if (hintContainer) {
+                    hintContainer.innerHTML = `<span>🔓</span> ${quest.hintUnlocked}`;
+                    hintContainer.classList.remove('hint-locked');
+                    hintContainer.classList.add('hint-unlocked');
+                }
+                // Меняем кнопку на "✅ Готово!" (визуально)
+                if (btnElement) {
+                    btnElement.textContent = "✅ Открыто!";
+                    btnElement.disabled = true;
+                    btnElement.style.opacity = "0.7";
+                    btnElement.style.cursor = "default";
+                }
+                inputElement.disabled = true;
+                inputElement.style.background = "#e0f0da";
+                // Показываем лёгкое уведомление
+                showToast(`🎉 Верно! Подсказка №${questId} открыта!`);
+
+                // Проверяем, все ли подсказки открыты
+                checkAllHintsUnlocked();
             } else {
-                // Если скрыто — показываем
-                textElement.classList.remove('hidden');
-                textElement.classList.add('visible');
-                button.textContent = 'спрятать';
-                isVisible = true;
+                // Если подсказка уже была открыта, просто напоминаем
+                showToast(`✨ Ответ "${quest.correctAnswer}" уже был принят! Подсказка уже твоя.`);
+                if(btnElement) {
+                    btnElement.textContent = "✅ Уже верно";
+                    btnElement.disabled = true;
+                }
+                inputElement.disabled = true;
+            }
+        } else {
+            // Неправильный ответ
+            showToast(`❌ Не совсем, Настя. Попробуй ещё раз! (подсказка: ищи ответ в реальной жизни)`);
+            inputElement.classList.add('error-shake');
+            setTimeout(() => {
+                inputElement.classList.remove('error-shake');
+            }, 400);
+        }
+    }
+
+    // маленький тост-уведомление
+    function showToast(message) {
+        let toast = document.getElementById('dynamic-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'dynamic-toast';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '30px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = '#2c3e2f';
+            toast.style.color = '#fff9e0';
+            toast.style.padding = '12px 24px';
+            toast.style.borderRadius = '40px';
+            toast.style.fontWeight = 'bold';
+            toast.style.zIndex = '1000';
+            toast.style.fontSize = '0.95rem';
+            toast.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
+            toast.style.backdropFilter = 'blur(8px)';
+            toast.style.whiteSpace = 'nowrap';
+            toast.style.fontFamily = 'system-ui';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                if(toast) toast.style.opacity = '0';
+            }, 2000);
+        }, 2200);
+    }
+
+    // Проверка, открыты ли все подсказки, и показ финального поздравления
+    function checkAllHintsUnlocked() {
+        const allUnlocked = (unlockedCount === totalQuests);
+        const finalDiv = document.getElementById('finalMessage');
+        if (allUnlocked && finalDiv) {
+            if (finalDiv.classList.contains('hidden-final')) {
+                finalDiv.classList.remove('hidden-final');
+                finalDiv.classList.add('final-visible');
+                // Дополнительный эффект
+                showToast("🎊 УРА! Все подсказки собраны! Читай поздравление! 🎊");
+                // Создаём конфетти (лёгкое)
+                createConfetti();
+            }
+        } else {
+            // Если не все, но финал всё ещё виден (случайно) - скрываем
+            if (finalDiv && !finalDiv.classList.contains('hidden-final') && unlockedCount !== totalQuests) {
+                finalDiv.classList.add('hidden-final');
+                finalDiv.classList.remove('final-visible');
             }
         }
+    }
 
-        // Вешаем обработчик на кнопку
-        button.addEventListener('click', toggleText);
-    </script>
+    function createConfetti() {
+        const confettiCount = 80;
+        for (let i = 0; i < confettiCount; i++) {
+            const conf = document.createElement('div');
+            conf.style.position = 'fixed';
+            conf.style.width = '8px';
+            conf.style.height = '12px';
+            conf.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
+            conf.style.top = '-20px';
+            conf.style.left = Math.random() * window.innerWidth + 'px';
+            conf.style.pointerEvents = 'none';
+            conf.style.zIndex = '9999';
+            conf.style.opacity = '0.8';
+            conf.style.borderRadius = '2px';
+            document.body.appendChild(conf);
+            const duration = 800 + Math.random() * 700;
+            const destination = window.innerHeight + 100;
+            const rotate = Math.random() * 360;
+            conf.animate([
+                { transform: `translateY(0px) rotate(0deg)`, opacity: 1 },
+                { transform: `translateY(${destination}px) rotate(${rotate}deg)`, opacity: 0 }
+            ], {
+                duration: duration,
+                easing: 'cubic-bezier(0.2, 0.9, 0.4, 1.1)',
+                fill: 'forwards'
+            });
+            setTimeout(() => { if(conf && conf.remove) conf.remove(); }, duration + 200);
+        }
+    }
+
+    // Рендер всех вопросов на странице
+    function renderQuests() {
+        const container = document.getElementById('questionsList');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = 0; i < quests.length; i++) {
+            const q = quests[i];
+            const idx = i;
+            const isUnlocked = hintsUnlocked[i] === true;
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.setAttribute('data-id', q.id);
+
+            // внутренняя структура
+            card.innerHTML = `
+                <div class="question-text">
+                    <span class="question-emoji">${q.emoji}</span>
+                    <span>${q.question}</span>
+                    ${isUnlocked ? '<span class="status-badge">✅ подсказка получена</span>' : '<span class="status-badge">🔒 ждёт ответ</span>'}
+                </div>
+                <div class="question-desc">✨ найди ответ в реальном мире ✨</div>
+                <div class="input-area">
+                    <input type="text" class="answer-input" id="input_${q.id}" placeholder="Введи найденное слово или число..." ${isUnlocked ? 'disabled' : ''}>
+                    <button class="check-btn" id="btn_${q.id}" ${isUnlocked ? 'disabled' : ''}>${isUnlocked ? '✅ открыто' : '🔍 проверить'}</button>
+                </div>
+                <div id="hint_${q.id}" class="hint-box ${isUnlocked ? 'hint-unlocked' : 'hint-locked'}">
+                    ${isUnlocked ? `🔓 ${q.hintUnlocked}` : `🔒 ${q.hintLocked}`}
+                </div>
+            `;
+            container.appendChild(card);
+
+            // привязываем обработчики, только если подсказка не открыта
+            if (!isUnlocked) {
+                const inputElem = document.getElementById(`input_${q.id}`);
+                const btnElem = document.getElementById(`btn_${q.id}`);
+                if (btnElem && inputElem) {
+                    const hintId = `hint_${q.id}`;
+                    btnElem.addEventListener('click', () => {
+                        checkAnswer(q.id, inputElem, hintId, btnElem);
+                    });
+                    // также по нажатию Enter на инпуте
+                    inputElem.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            checkAnswer(q.id, inputElem, hintId, btnElem);
+                        }
+                    });
+                }
+            } else {
+                // если уже открыто — сделаем инпут неактивным, кнопку неактивной
+                const inputElem = document.getElementById(`input_${q.id}`);
+                if(inputElem) inputElem.disabled = true;
+                const btnElem = document.getElementById(`btn_${q.id}`);
+                if(btnElem) {
+                    btnElem.disabled = true;
+                    btnElem.textContent = '✅ открыто';
+                }
+            }
+        }
+    }
+
+    // Добавляем стиль для тряски
+    const styleShake = document.createElement('style');
+    styleShake.textContent = `
+        .error-shake {
+            animation: shake 0.3s ease-in-out 0s 2;
+            border-color: #e76f51 !important;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .hint-locked {
+            filter: blur(3px);
+            background: #f3e5d5;
+        }
+        .hint-unlocked {
+            filter: blur(0px);
+        }
+    `;
+    document.head.appendChild(styleShake);
+
+    // Инициализация
+    loadProgress();
+    renderQuests();
+    checkAllHintsUnlocked();   // на случай если уже все открыты (после загрузки)
+    // Если финал уже должен быть виден из-за прогресса
+    setTimeout(() => {
+        checkAllHintsUnlocked();
+    }, 50);
+</script>
 </body>
 </html>
+```
