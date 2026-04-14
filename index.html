@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Квест для Насти | Лента или Арена</title>
+    <title>Квест для Насти | Лента или Арена + Доп приз</title>
     <style>
         * {
             margin: 0;
@@ -115,6 +114,20 @@
             transform: scale(0.97);
         }
 
+        .btn-secondary {
+            background: #c96f3e;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 60px;
+            color: white;
+            cursor: pointer;
+            margin: 10px 0;
+            width: 100%;
+            transition: 0.1s;
+        }
+
         .question-text {
             font-size: 1.4rem;
             font-weight: 600;
@@ -173,6 +186,26 @@
             margin-top: 25px;
             font-weight: bold;
             animation: fadeUp 0.5s ease;
+        }
+
+        /* Стили для доп приза */
+        .prize-block {
+            background: #fff0df;
+            border-radius: 50px;
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px dashed #f7a35c;
+        }
+
+        .prize-message {
+            background: #ffecd6;
+            padding: 16px;
+            border-radius: 40px;
+            margin: 15px 0;
+            color: #b0451c;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 500;
         }
 
         @keyframes fadeUp {
@@ -260,13 +293,32 @@
         <div id="shopError" class="wrong-feedback hidden"></div>
     </div>
 
-    <!-- ЭТАП 6: направляйся на лавочку, откуда веет аурой любви... финал -->
+    <!-- ЭТАП 6: направляйся на лавочку, откуда веет аурой любви... + финал + доп приз -->
     <div id="stage6" class="stage stage-hidden">
         <div class="final-message">
             💖 Направляйся на лавочку, откуда веет аурой любви... 💖<br><br>
             🌹 Там тебя ждёт сюрприз! 🌹<br>
             🎁 Поздравляю с днём рождения, Настя! Ты прошла весь квест! 🎁<br>
             🕊️ Люблю и обнимаю! 🕊️
+        </div>
+        
+        <!-- Блок с дополнительным призом -->
+        <div id="prizeBlock" class="prize-block">
+            <button id="getPrizeBtn" class="btn-secondary">🎁 ПОЛУЧИТЬ ДОП ПРИЗ 🎁</button>
+            <div id="prizeReveal" class="hidden">
+                <div class="prize-message">
+                    ✨ ОН ИДЕАЛЕН НА ВСЕ 72/100. А ЕГО ТРОЙНАЯ ПОРЦИЯ НЕ ОСТАВИТ НИКОГО РАВНОДУШНЫМ. ✨
+                </div>
+                <div class="input-area" style="margin-top: 15px;">
+                    <input type="text" id="burgerInput" class="answer-input" placeholder="Введи секретное слово...">
+                    <button id="checkBurgerBtn" class="check-btn">🔓 АКТИВИРОВАТЬ</button>
+                </div>
+                <div id="burgerError" class="wrong-feedback hidden"></div>
+                <div id="burgerSuccess" class="hidden" style="background: #d4edc9; padding: 12px; border-radius: 40px; margin-top: 15px; text-align: center; font-weight: bold; color: #2c662d;">
+                    🍔 УРА! ТЫ ПОЛУЧИЛА СУПЕР-ПРИЗ! ЧИКЕНБУРГЕР ТВОЙ! 🍔<br>
+                    🌟 Обними того, кто рядом, и загадай желание! 🌟
+                </div>
+            </div>
         </div>
         <footer style="margin-top: 20px;">✨ Ты умница! ✨</footer>
     </div>
@@ -275,9 +327,9 @@
 </div>
 
 <script>
-    // Состояние: текущий этап (0 - выбор, 1 - кнопка пришла после арены, 2 - цветок, 3 - три человека, 4 - миллион лет, 5 - магазин, 6 - финал)
-    let currentStage = 0;       // 0=выбор, 1=пришла, 2=цветок, 3=три человека, 4=миллион лет, 5=магазин, 6=лавка
-    let arenaSelected = false;   // правильный ли выбор сделан
+    // Состояние: текущий этап
+    let currentStage = 0;       
+    let arenaSelected = false;   
 
     // DOM элементы
     const stage0 = document.getElementById('stage0');
@@ -298,6 +350,14 @@
     const arriveBtn1 = document.getElementById('arriveBtn1');
     const arriveBtn2 = document.getElementById('arriveBtn2');
     const arriveBtn3 = document.getElementById('arriveBtn3');
+    
+    // Элементы доп приза
+    const getPrizeBtn = document.getElementById('getPrizeBtn');
+    const prizeReveal = document.getElementById('prizeReveal');
+    const burgerInput = document.getElementById('burgerInput');
+    const checkBurgerBtn = document.getElementById('checkBurgerBtn');
+    const burgerError = document.getElementById('burgerError');
+    const burgerSuccess = document.getElementById('burgerSuccess');
 
     // Вспомогательная функция для скрытия всех этапов
     function hideAllStages() {
@@ -323,16 +383,23 @@
             default: stage0.classList.remove('stage-hidden');
         }
         currentStage = stageNumber;
-        // Сохраняем прогресс в localStorage
         localStorage.setItem('nastya_quest_stage', currentStage);
         localStorage.setItem('arenaSelected', arenaSelected);
+        
+        // При показе финального этапа сбрасываем состояние доп приза (чтобы при повторном открытии не было глюков)
+        if(stageNumber === 6) {
+            // Не прячем призовой блок, но сбрасываем внутренние поля, если они открыты
+            if(prizeReveal && !prizeReveal.classList.contains('hidden')) {
+                // оставляем как есть, чтобы сохранить прогресс внутри доп приза
+            }
+        }
     }
 
-    // Функция для сброса ошибок
     function clearErrors() {
         if(wrongChoiceMsg) wrongChoiceMsg.classList.add('hidden');
         if(flowerError) flowerError.classList.add('hidden');
         if(shopError) shopError.classList.add('hidden');
+        if(burgerError) burgerError.classList.add('hidden');
     }
 
     // Обработка выбора (лента / арена)
@@ -342,31 +409,26 @@
             const choice = btn.getAttribute('data-choice');
             clearErrors();
             if (choice === 'арена') {
-                // Правильный выбор!
                 arenaSelected = true;
-                // Переходим к этапу 1 (кнопка "пришла")
                 showStage(1);
-                // Сохраняем
                 localStorage.setItem('nastya_quest_stage', 1);
                 localStorage.setItem('arenaSelected', true);
             } 
             else if (choice === 'лента') {
-                // Неправильно: говорим попробовать еще раз
                 wrongChoiceMsg.classList.remove('hidden');
-                wrongChoiceMsg.innerHTML = '❌ Не‑а, попробуй ещё раз! ❌<br>🎯 Выбирай АРЕНУ!';
+                wrongChoiceMsg.innerHTML = '❌ Не-а, попробуй ещё раз! ❌<br>🎯 Выбирай АРЕНУ!';
                 arenaSelected = false;
                 localStorage.setItem('arenaSelected', false);
             }
         });
     });
 
-    // Кнопка "ПРИШЛА" (этап 1 -> переход к этапу 2: найти знакомое лицо)
+    // Кнопка "ПРИШЛА" (этап 1 -> этап 2)
     if(arriveBtn1) {
         arriveBtn1.addEventListener('click', () => {
             if(arenaSelected === true) {
                 showStage(2);
             } else {
-                // на всякий случай, если вдруг не выбран путь, но мы уже должны быть на этапе1 только после арены
                 showStage(0);
             }
         });
@@ -376,7 +438,6 @@
     function checkFlowerWord() {
         const userAnswer = flowerInput.value.trim().toLowerCase();
         if(userAnswer === 'цветок') {
-            // Верно! Переходим к этапу 3: фраза "Верно, теперь иди туда где сталкиваются три твоих любимых человека"
             showStage(3);
             clearErrors();
         } else {
@@ -394,14 +455,14 @@
         });
     }
 
-    // Кнопка "ПОДОШЛА" после этапа 3 (три любимых человека) -> этап 4 (миллион лет)
+    // Кнопка "ПОДОШЛА" этап 3 -> этап 4
     if(arriveBtn2) {
         arriveBtn2.addEventListener('click', () => {
             showStage(4);
         });
     }
 
-    // Кнопка "ПОДОШЛА" после этапа 4 (миллион лет) -> этап 5 (магазин в карточках)
+    // Кнопка "ПОДОШЛА" этап 4 -> этап 5
     if(arriveBtn3) {
         arriveBtn3.addEventListener('click', () => {
             showStage(5);
@@ -411,10 +472,8 @@
     // Этап 5: проверка магазина "Ярче!"
     function checkShopWord() {
         const shopAnswer = shopInput.value.trim().toLowerCase();
-        // Сравниваем с "ярче!" (допускаем с восклицательным или без, но по сценарию "Ярче! ")
         const normalized = shopAnswer.replace(/!+$/, '').trim();
         if(normalized === 'ярче') {
-            // Правильно! Переходим к финальному этапу 6: лавочка с аурой любви
             showStage(6);
             clearErrors();
         } else {
@@ -432,7 +491,78 @@
         });
     }
 
-    // Загрузка прогресса при открытии страницы
+    // ========== ДОПОЛНИТЕЛЬНЫЙ ПРИЗ ==========
+    // Кнопка "Получить доп приз" — показывает скрытый блок с фразой и полем для ввода
+    if(getPrizeBtn) {
+        getPrizeBtn.addEventListener('click', () => {
+            if(prizeReveal.classList.contains('hidden')) {
+                prizeReveal.classList.remove('hidden');
+                // Добавим легкую анимацию
+                prizeReveal.style.animation = 'fadeUp 0.4s ease';
+                setTimeout(() => { prizeReveal.style.animation = ''; }, 500);
+            } else {
+                // Если уже открыто, можно ничего не делать или показать заново
+                prizeReveal.classList.remove('hidden');
+            }
+            // Скрываем кнопку, чтобы не дублировать (по желанию, но можно оставить активной)
+            // getPrizeBtn.style.display = 'none';  // по желанию, но пусть остаётся
+        });
+    }
+
+    // Проверка слова "чикенбургер"
+    function checkBurgerWord() {
+        const burgerAnswer = burgerInput.value.trim().toLowerCase();
+        // принимаем варианты: чикенбургер, чикен бургер, chickenburger
+        const normalized = burgerAnswer.replace(/\s+/g, '').replace(/chicken/i, 'чикен');
+        if(burgerAnswer === 'чикенбургер' || burgerAnswer === 'чикинбургер' || normalized === 'чикенбургер' || burgerAnswer === 'chickenburger') {
+            // Правильно!
+            burgerError.classList.add('hidden');
+            burgerSuccess.classList.remove('hidden');
+            // Дополнительно можно заблокировать поле и кнопку
+            burgerInput.disabled = true;
+            checkBurgerBtn.disabled = true;
+            checkBurgerBtn.style.opacity = '0.6';
+            // Показать конфетти радости
+            launchMiniConfetti();
+        } else {
+            burgerError.classList.remove('hidden');
+            burgerError.innerHTML = '❌ Не тот секретный ингредиент! Попробуй ввести "чикенбургер" (вкусняшка из фастфуда)';
+        }
+    }
+
+    if(checkBurgerBtn) {
+        checkBurgerBtn.addEventListener('click', checkBurgerWord);
+    }
+    if(burgerInput) {
+        burgerInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') checkBurgerWord();
+        });
+    }
+
+    // Маленький конфетти для приза
+    function launchMiniConfetti() {
+        for (let i = 0; i < 60; i++) {
+            const conf = document.createElement('div');
+            conf.style.position = 'fixed';
+            conf.style.width = Math.random() * 10 + 4 + 'px';
+            conf.style.height = Math.random() * 10 + 6 + 'px';
+            conf.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 65%)`;
+            conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+            conf.style.left = Math.random() * window.innerWidth + 'px';
+            conf.style.top = '-20px';
+            conf.style.pointerEvents = 'none';
+            conf.style.zIndex = '9999';
+            document.body.appendChild(conf);
+            const duration = 800 + Math.random() * 700;
+            conf.animate([
+                { transform: 'translateY(0px) rotate(0deg)', opacity: 0.9 },
+                { transform: `translateY(${window.innerHeight + 50}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ], { duration: duration, easing: 'cubic-bezier(0.3,0.8,0.6,1)', fill: 'forwards' });
+            setTimeout(() => conf.remove(), duration + 100);
+        }
+    }
+
+    // Загрузка прогресса
     function loadProgress() {
         const savedStage = localStorage.getItem('nastya_quest_stage');
         const savedArena = localStorage.getItem('arenaSelected');
@@ -443,7 +573,6 @@
         if(savedStage !== null) {
             let stageNum = parseInt(savedStage);
             if(!isNaN(stageNum) && stageNum >= 0 && stageNum <= 6) {
-                // дополнительная логика: если сохранён этап >0, но арена не выбрана, то сбрасываем на выбор, чтобы не ломать логику
                 if(stageNum >= 1 && !arenaSelected) {
                     showStage(0);
                 } else {
@@ -452,21 +581,10 @@
                 return;
             }
         }
-        // По умолчанию: этап выбора
         showStage(0);
     }
 
-    // Небольшой эффект для кнопок (визуал)
-    const allBtns = document.querySelectorAll('button');
-    allBtns.forEach(btn => {
-        btn.addEventListener('touchstart', function() {});
-    });
-
     loadProgress();
-
-    // Если вдруг на этапе 2 или 5 введены правильные ответы после перезагрузки, но этап не продвинут? но мы сохраняем только этапы, 
-    // и прогресс ввода не храним специально, чтобы Настя каждый раз вводила заново (честное прохождение).
-    // Доп. защита: если текущий этап 5 или 2 и мы загрузили, просто показываем поля для ввода
 </script>
 </body>
 </html>
