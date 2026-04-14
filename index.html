@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>С Днём Рождения, Настя! | Поэтапный квест</title>
+    <title>Квест для Насти | Лента или Арена</title>
     <style>
         * {
             margin: 0;
@@ -13,656 +14,459 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(145deg, #fce8d2 0%, #f8c8a0 100%);
-            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
-            padding: 30px 20px;
+            background: linear-gradient(145deg, #f3d9b1 0%, #edb17e 100%);
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            padding: 25px 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
         }
 
-        /* Основной контейнер */
-        .birthday-container {
-            max-width: 680px;
+        .quest-wrapper {
+            max-width: 650px;
             width: 100%;
-            margin: 0 auto;
             background: rgba(255, 250, 240, 0.97);
-            border-radius: 72px;
-            padding: 32px 28px 48px;
-            box-shadow: 0 30px 45px rgba(0,0,0,0.2), 0 0 0 10px #fff5e6;
-            transition: all 0.3s ease;
-        }
-
-        /* Вводное поздравление */
-        .intro-card {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px dotted #ffbf8e;
-        }
-
-        .greeting-badge {
-            background: #ffb882;
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 60px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #6b2e1a;
-            letter-spacing: 1px;
-            margin-bottom: 18px;
+            border-radius: 70px;
+            padding: 35px 28px 45px;
+            box-shadow: 0 30px 45px rgba(0,0,0,0.2), 0 0 0 8px #fff2e2;
+            transition: all 0.3s;
         }
 
         h1 {
-            font-size: 2.8rem;
+            font-size: 2rem;
+            text-align: center;
+            color: #b33a1c;
+            margin-bottom: 8px;
             font-weight: 800;
-            color: #c23b22;
-            font-family: 'Dancing Script', cursive;
-            text-shadow: 3px 3px 0 #ffe0b5;
-            margin-bottom: 12px;
         }
 
-        .intro-text {
-            font-size: 1.2rem;
-            color: #a5512c;
-            background: #fff3e4;
-            padding: 16px 20px;
-            border-radius: 48px;
-            line-height: 1.4;
-            margin-top: 12px;
-            box-shadow: inset 0 1px 4px #ffd8b5, 0 4px 8px rgba(0,0,0,0.02);
+        .greeting {
+            text-align: center;
+            font-size: 1rem;
+            color: #a3532a;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed #ffcd94;
+            display: inline-block;
+            width: 100%;
+            padding-bottom: 12px;
         }
 
-        /* Область квеста */
-        .quest-stage {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
+        .stage {
+            transition: all 0.3s ease;
         }
 
-        /* Каждый шаг */
-        .step {
-            background: #fff9f2;
-            border-radius: 56px;
-            padding: 20px 24px;
-            transition: all 0.35s ease;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.05);
-            border: 1px solid #ffe1bc;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .step-hidden {
+        .stage-hidden {
             display: none;
         }
 
-        .step-title {
+        .choice-buttons {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #b64926;
-            margin-bottom: 16px;
-        }
-
-        .step-emoji {
-            font-size: 2rem;
-        }
-
-        .question {
-            font-size: 1.2rem;
-            font-weight: 500;
-            background: #ffefdd;
-            padding: 12px 18px;
-            border-radius: 40px;
-            margin: 12px 0 18px;
-            color: #75401f;
-        }
-
-        .input-group {
-            display: flex;
+            gap: 25px;
+            justify-content: center;
+            margin: 30px 0;
             flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            margin: 10px 0 12px;
         }
 
-        .answer-field {
+        .choice-btn {
+            background: #ffb469;
+            border: none;
+            padding: 16px 38px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            border-radius: 80px;
+            cursor: pointer;
+            color: #4e2a18;
+            transition: 0.1s;
+            box-shadow: 0 5px 0 #9b4a24;
+            font-family: inherit;
+        }
+
+        .choice-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #9b4a24;
+        }
+
+        .wrong-feedback {
+            background: #ffddcc;
+            color: #c0392b;
+            padding: 12px;
+            border-radius: 60px;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #e67e22;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 60px;
+            color: white;
+            cursor: pointer;
+            margin: 15px 0;
+            width: 100%;
+            transition: 0.1s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #bb542b;
+            margin: 20px 0 12px;
+            background: #ffefdd;
+            padding: 16px;
+            border-radius: 48px;
+            text-align: center;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 10px 0 10px;
+        }
+
+        .answer-input {
             flex: 3;
             padding: 14px 20px;
             font-size: 1rem;
-            border: 2px solid #ffce9e;
+            border: 2px solid #ffc489;
             border-radius: 60px;
             outline: none;
-            font-family: monospace;
             background: white;
-            transition: 0.2s;
+            font-family: monospace;
             font-weight: 500;
         }
 
-        .answer-field:focus {
-            border-color: #f47c3c;
-            box-shadow: 0 0 0 3px rgba(244,124,60,0.2);
-        }
-
-        .check-step-btn {
+        .check-btn {
             background: #f4a261;
             border: none;
             padding: 12px 28px;
             border-radius: 60px;
             font-weight: bold;
             color: white;
-            font-size: 1rem;
             cursor: pointer;
-            transition: 0.15s;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
         }
 
-        .check-step-btn:hover {
-            background: #e76f51;
-            transform: scale(0.97);
-        }
-
-        .check-step-btn:active {
-            transform: scale(0.95);
-        }
-
-        .hint-place {
-            margin-top: 18px;
-            background: #fff0e0;
-            border-radius: 32px;
+        .info-message {
+            background: #ffe1b9;
             padding: 14px 18px;
-            font-size: 0.95rem;
-            color: #bc6f3a;
-            border-left: 6px solid #ffb347;
-            transition: all 0.2s;
-        }
-
-        .unlocked-hint {
-            background: #e0f0da;
-            color: #2c6e2f;
-            border-left-color: #5fad41;
+            border-radius: 40px;
+            margin: 15px 0;
+            color: #9b4b2c;
             font-weight: 500;
-        }
-
-        .locked-hint {
-            filter: blur(4px);
-            background: #f3e5d8;
-            user-select: none;
-            pointer-events: none;
-        }
-
-        .step-complete-badge {
-            display: inline-block;
-            margin-top: 12px;
-            font-size: 0.8rem;
-            background: #b3d9a0;
-            padding: 4px 12px;
-            border-radius: 60px;
-            color: #2c5e1a;
-        }
-
-        /* Финальное поздравление */
-        .final-congrats {
             text-align: center;
-            margin-top: 40px;
-            background: linear-gradient(125deg, #ffd966, #ffb86b);
-            border-radius: 60px;
-            padding: 26px 20px;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.2);
-            cursor: pointer;
-            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
         }
 
-        .final-hidden {
+        .final-message {
+            background: linear-gradient(135deg, #ffd966, #ffb347);
+            text-align: center;
+            padding: 24px;
+            border-radius: 56px;
+            margin-top: 25px;
+            font-weight: bold;
+            animation: fadeUp 0.5s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden {
             display: none;
         }
 
-        .final-visible {
-            display: block;
-            animation: bounceUp 0.6s ease;
-        }
-
-        @keyframes bounceUp {
-            0% { opacity: 0; transform: scale(0.85) translateY(20px); }
-            70% { transform: scale(1.02) translateY(-4px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .final-congrats h3 {
-            font-size: 2rem;
-            font-family: 'Dancing Script', cursive;
-            margin-bottom: 12px;
-            color: #4a2512;
-        }
-
-        .final-congrats p {
-            font-size: 1.15rem;
-            font-weight: 500;
-        }
-
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 14px;
-            background: gold;
-            top: -20px;
-            pointer-events: none;
-            z-index: 10000;
-        }
-
         footer {
-            text-align: center;
             font-size: 0.7rem;
-            margin-top: 32px;
-            color: #b5693a;
+            text-align: center;
+            margin-top: 35px;
+            color: #b56a3a;
         }
 
         button:disabled {
             opacity: 0.6;
-            cursor: default;
             transform: none;
         }
 
-        @media (max-width: 550px) {
-            .birthday-container {
-                padding: 24px 18px;
-            }
-            h1 {
-                font-size: 2rem;
-            }
-            .step-title {
+        @media (max-width: 500px) {
+            .choice-btn {
                 font-size: 1.2rem;
+                padding: 12px 28px;
             }
-            .input-group {
-                flex-direction: column;
-            }
-            .check-step-btn {
-                width: 100%;
+            .question-text {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
-<div class="birthday-container">
-    <!-- Вводное поздравление сверху -->
-    <div class="intro-card">
-        <div class="greeting-badge">🎀 СЕГОДНЯ ОСОБЕННЫЙ ДЕНЬ 🎀</div>
-        <h1>С Днём рождения, Настя! 🎂</h1>
-        <div class="intro-text">
-            ✨ Ты — главная звёздочка этого праздника! ✨<br>
-            Я приготовил для тебя небольшой квест. <br>
-            Чтобы получить подсказки и моё финальное поздравление,<br>
-            нужно найти ответы в реальной жизни (спроси у близких, загляни в тайные места).<br>
-            <strong>Каждый правильный ответ открывает следующий шаг и новую подсказку.</strong><br>
-            💖 Удачи, именинница!
+<div class="quest-wrapper">
+    <h1>🎂 С Днём Рождения, Настя! 🎉</h1>
+    <div class="greeting">✨ Квест с выбором пути ✨</div>
+
+    <!-- ЭТАП 0: выбор лента / арена -->
+    <div id="stage0" class="stage">
+        <div style="text-align: center; font-size: 1.3rem; margin-bottom: 10px;">📍 Выбери, куда отправимся?</div>
+        <div class="choice-buttons">
+            <button class="choice-btn" data-choice="лента">🎀 Лента</button>
+            <button class="choice-btn" data-choice="арена">🏟️ Арена</button>
         </div>
+        <div id="wrongChoiceMsg" class="wrong-feedback hidden"></div>
     </div>
 
-    <!-- Динамическая область квеста (шаги будут появляться последовательно) -->
-    <div id="questArea" class="quest-stage"></div>
-
-    <!-- Финальное поздравление (появится в самом конце) -->
-    <div id="finalCongrats" class="final-congrats final-hidden">
-        <h3>🎉 Настя, ты справилась! 🎉</h3>
-        <p>💐 Ты разгадала все загадки и собрала все мои намёки! 💐<br>
-        🌟 Желаю тебе океан улыбок, исполнения самых заветных желаний и яркого счастья каждый день! 🌟<br>
-        🎂 Пусть этот год будет полон приключений, любви и волшебства! 🎂<br>
-        💕 Обнимаю и поздравляю от всей души! Ты лучшая! 💕</p>
-        <span style="font-size: 2rem;">🎁🎈🎀🍰</span>
+    <!-- ЭТАП 1: после выбора арены появляется кнопка "пришла" -->
+    <div id="stage1" class="stage stage-hidden">
+        <div class="info-message">⭐ Ты на месте! Нажми, когда будешь готова идти дальше.</div>
+        <button id="arriveBtn1" class="btn-primary">🌸 ПРИШЛА</button>
     </div>
-    <footer>🔎 Ищи ответы в реальном мире: спроси у родных, загляни в записочки или вспомни наши секретики.</footer>
+
+    <!-- ЭТАП 2: найти знакомое лицо + ввод "цветок" -->
+    <div id="stage2" class="stage stage-hidden">
+        <div class="question-text">👀 Найди знакомое лицо...</div>
+        <div class="input-area">
+            <input type="text" id="flowerInput" class="answer-input" placeholder="Введи слово, которое ты увидела...">
+            <button id="checkFlowerBtn" class="check-btn">🔍 Проверить</button>
+        </div>
+        <div id="flowerError" class="wrong-feedback hidden" style="margin-top: 5px;"></div>
+    </div>
+
+    <!-- ЭТАП 3: Верно, теперь иди туда где сталкиваются три твоих любимых человека + кнопка подошла -->
+    <div id="stage3" class="stage stage-hidden">
+        <div class="info-message">✅ Верно! Теперь иди туда, где сталкиваются три твоих любимых человека.</div>
+        <button id="arriveBtn2" class="btn-primary">🚶‍♀️ ПОДОШЛА</button>
+    </div>
+
+    <!-- ЭТАП 4: иди туда где можно простоять миллион лет + кнопка подошла -->
+    <div id="stage4" class="stage stage-hidden">
+        <div class="info-message">⏳ Иди туда, где можно простоять миллион лет...</div>
+        <button id="arriveBtn3" class="btn-primary">⏰ ПОДОШЛА</button>
+    </div>
+
+    <!-- ЭТАП 5: Введи магазин спрятанный в карточках -> ответ "Ярче!" -->
+    <div id="stage5" class="stage stage-hidden">
+        <div class="question-text">🃏 Введи магазин, спрятанный в карточках</div>
+        <div class="input-area">
+            <input type="text" id="shopInput" class="answer-input" placeholder="Название магазина...">
+            <button id="checkShopBtn" class="check-btn">🔍 Проверить</button>
+        </div>
+        <div id="shopError" class="wrong-feedback hidden"></div>
+    </div>
+
+    <!-- ЭТАП 6: направляйся на лавочку, откуда веет аурой любви... финал -->
+    <div id="stage6" class="stage stage-hidden">
+        <div class="final-message">
+            💖 Направляйся на лавочку, откуда веет аурой любви... 💖<br><br>
+            🌹 Там тебя ждёт сюрприз! 🌹<br>
+            🎁 Поздравляю с днём рождения, Настя! Ты прошла весь квест! 🎁<br>
+            🕊️ Люблю и обнимаю! 🕊️
+        </div>
+        <footer style="margin-top: 20px;">✨ Ты умница! ✨</footer>
+    </div>
+
+    <footer id="globalFooter">💬 Следуй подсказкам и нажимай кнопки, когда окажешься на месте</footer>
 </div>
 
 <script>
-    // ---------- НАСТРОЙКИ КВЕСТА (вопросы, ответы и подсказки) ----------
-    // ВНИМАНИЕ: ответы должны быть строчными, точное совпадение (можно цифры).
-    // После каждого правильного ответа появляется следующий шаг.
-    const stepsData = [
-        {
-            emoji: "🐾",
-            title: "Шаг 1. Тайный зверь",
-            question: "Какое пушистое создание живёт у нас дома и любит мурлыкать по утрам? (одно слово)",
-            correctAnswer: "кошка",
-            hintLocked: "🔒 Правильный ответ откроет подсказку: где лежит первый сюрприз...",
-            hintUnlocked: "🔓 ПОДСКАЗКА №1: Загляни под любимую кружку на кухне — там записка с координатами следующей зацепки! (или спроси у папы про 'сладкое место')"
-        },
-        {
-            emoji: "🎂",
-            title: "Шаг 2. Заветная дата",
-            question: "Число моего рождения? (две цифры, например 07 или 14)",
-            correctAnswer: "14",   // ПРИМЕР: 14 число, замени на реальное
-            hintLocked: "🔒 Введи правильное число, чтобы получить подсказку для поиска подарка...",
-            hintUnlocked: "🔓 ПОДСКАЗКА №2: Вспомни нашу любимую кофейню. У стойки спроси 'секретный десерт для Насти' — тебе дадут конверт!"
-        },
-        {
-            emoji: "🍕",
-            title: "Шаг 3. Вкус воспоминаний",
-            question: "Что мы заказывали в прошлую пятницу и ели с огромным удовольствием? (одно слово)",
-            correctAnswer: "пицца",
-            hintLocked: "🔒 Этот ответ приведёт тебя к финальной подсказке!",
-            hintUnlocked: "🔓 ПОДСКАЗКА №3 (финал): Иди к книжной полке, найди книгу в жёлтой обложке. Внутри лежит последняя записка, где спрятан главный сюрприз!"
+    // Состояние: текущий этап (0 - выбор, 1 - кнопка пришла после арены, 2 - цветок, 3 - три человека, 4 - миллион лет, 5 - магазин, 6 - финал)
+    let currentStage = 0;       // 0=выбор, 1=пришла, 2=цветок, 3=три человека, 4=миллион лет, 5=магазин, 6=лавка
+    let arenaSelected = false;   // правильный ли выбор сделан
+
+    // DOM элементы
+    const stage0 = document.getElementById('stage0');
+    const stage1 = document.getElementById('stage1');
+    const stage2 = document.getElementById('stage2');
+    const stage3 = document.getElementById('stage3');
+    const stage4 = document.getElementById('stage4');
+    const stage5 = document.getElementById('stage5');
+    const stage6 = document.getElementById('stage6');
+
+    const wrongChoiceMsg = document.getElementById('wrongChoiceMsg');
+    const flowerInput = document.getElementById('flowerInput');
+    const checkFlowerBtn = document.getElementById('checkFlowerBtn');
+    const flowerError = document.getElementById('flowerError');
+    const shopInput = document.getElementById('shopInput');
+    const checkShopBtn = document.getElementById('checkShopBtn');
+    const shopError = document.getElementById('shopError');
+    const arriveBtn1 = document.getElementById('arriveBtn1');
+    const arriveBtn2 = document.getElementById('arriveBtn2');
+    const arriveBtn3 = document.getElementById('arriveBtn3');
+
+    // Вспомогательная функция для скрытия всех этапов
+    function hideAllStages() {
+        stage0.classList.add('stage-hidden');
+        stage1.classList.add('stage-hidden');
+        stage2.classList.add('stage-hidden');
+        stage3.classList.add('stage-hidden');
+        stage4.classList.add('stage-hidden');
+        stage5.classList.add('stage-hidden');
+        stage6.classList.add('stage-hidden');
+    }
+
+    function showStage(stageNumber) {
+        hideAllStages();
+        switch(stageNumber) {
+            case 0: stage0.classList.remove('stage-hidden'); break;
+            case 1: stage1.classList.remove('stage-hidden'); break;
+            case 2: stage2.classList.remove('stage-hidden'); break;
+            case 3: stage3.classList.remove('stage-hidden'); break;
+            case 4: stage4.classList.remove('stage-hidden'); break;
+            case 5: stage5.classList.remove('stage-hidden'); break;
+            case 6: stage6.classList.remove('stage-hidden'); break;
+            default: stage0.classList.remove('stage-hidden');
         }
-    ];
+        currentStage = stageNumber;
+        // Сохраняем прогресс в localStorage
+        localStorage.setItem('nastya_quest_stage', currentStage);
+        localStorage.setItem('arenaSelected', arenaSelected);
+    }
 
-    // Храним состояние: какие шаги уже разблокированы (видимы)
-    let unlockedSteps = []; // массив boolean, по умолчанию только первый видим
-    // Массив для хранения DOM-элементов шагов
-    let stepElements = [];
+    // Функция для сброса ошибок
+    function clearErrors() {
+        if(wrongChoiceMsg) wrongChoiceMsg.classList.add('hidden');
+        if(flowerError) flowerError.classList.add('hidden');
+        if(shopError) shopError.classList.add('hidden');
+    }
 
-    // Флаг, что финальное поздравление уже показано (чтобы не дублировать)
-    let finalRevealed = false;
+    // Обработка выбора (лента / арена)
+    const choiceBtns = document.querySelectorAll('.choice-btn');
+    choiceBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const choice = btn.getAttribute('data-choice');
+            clearErrors();
+            if (choice === 'арена') {
+                // Правильный выбор!
+                arenaSelected = true;
+                // Переходим к этапу 1 (кнопка "пришла")
+                showStage(1);
+                // Сохраняем
+                localStorage.setItem('nastya_quest_stage', 1);
+                localStorage.setItem('arenaSelected', true);
+            } 
+            else if (choice === 'лента') {
+                // Неправильно: говорим попробовать еще раз
+                wrongChoiceMsg.classList.remove('hidden');
+                wrongChoiceMsg.innerHTML = '❌ Не‑а, попробуй ещё раз! ❌<br>🎯 Выбирай АРЕНУ!';
+                arenaSelected = false;
+                localStorage.setItem('arenaSelected', false);
+            }
+        });
+    });
 
-    // Инициализация: первый шаг видим, остальные скрыты
-    function initStepsState() {
-        for (let i = 0; i < stepsData.length; i++) {
-            if (i === 0) {
-                unlockedSteps[i] = true;   // первый шаг открыт с самого начала
+    // Кнопка "ПРИШЛА" (этап 1 -> переход к этапу 2: найти знакомое лицо)
+    if(arriveBtn1) {
+        arriveBtn1.addEventListener('click', () => {
+            if(arenaSelected === true) {
+                showStage(2);
             } else {
-                unlockedSteps[i] = false;
+                // на всякий случай, если вдруг не выбран путь, но мы уже должны быть на этапе1 только после арены
+                showStage(0);
             }
+        });
+    }
+
+    // Этап 2: проверка слова "цветок"
+    function checkFlowerWord() {
+        const userAnswer = flowerInput.value.trim().toLowerCase();
+        if(userAnswer === 'цветок') {
+            // Верно! Переходим к этапу 3: фраза "Верно, теперь иди туда где сталкиваются три твоих любимых человека"
+            showStage(3);
+            clearErrors();
+        } else {
+            flowerError.classList.remove('hidden');
+            flowerError.innerHTML = '❌ Не то слово. Посмотри внимательно на знакомое лицо, что в руках? Попробуй ещё раз!';
         }
     }
 
-    // Сохраняем прогресс (какие шаги открыты) в localStorage
-    function saveProgress() {
-        localStorage.setItem('nastya_steps_unlocked', JSON.stringify(unlockedSteps));
-        localStorage.setItem('nastya_final_revealed', finalRevealed);
+    if(checkFlowerBtn) {
+        checkFlowerBtn.addEventListener('click', checkFlowerWord);
+    }
+    if(flowerInput) {
+        flowerInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') checkFlowerWord();
+        });
     }
 
-    // Загружаем прогресс
+    // Кнопка "ПОДОШЛА" после этапа 3 (три любимых человека) -> этап 4 (миллион лет)
+    if(arriveBtn2) {
+        arriveBtn2.addEventListener('click', () => {
+            showStage(4);
+        });
+    }
+
+    // Кнопка "ПОДОШЛА" после этапа 4 (миллион лет) -> этап 5 (магазин в карточках)
+    if(arriveBtn3) {
+        arriveBtn3.addEventListener('click', () => {
+            showStage(5);
+        });
+    }
+
+    // Этап 5: проверка магазина "Ярче!"
+    function checkShopWord() {
+        const shopAnswer = shopInput.value.trim().toLowerCase();
+        // Сравниваем с "ярче!" (допускаем с восклицательным или без, но по сценарию "Ярче! ")
+        const normalized = shopAnswer.replace(/!+$/, '').trim();
+        if(normalized === 'ярче') {
+            // Правильно! Переходим к финальному этапу 6: лавочка с аурой любви
+            showStage(6);
+            clearErrors();
+        } else {
+            shopError.classList.remove('hidden');
+            shopError.innerHTML = '❌ Не угадала! Вспомни магазин, который прячется в карточках (подсказка: яркое название). Попробуй ещё раз!';
+        }
+    }
+
+    if(checkShopBtn) {
+        checkShopBtn.addEventListener('click', checkShopWord);
+    }
+    if(shopInput) {
+        shopInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') checkShopWord();
+        });
+    }
+
+    // Загрузка прогресса при открытии страницы
     function loadProgress() {
-        const saved = localStorage.getItem('nastya_steps_unlocked');
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed) && parsed.length === stepsData.length) {
-                    unlockedSteps = parsed;
+        const savedStage = localStorage.getItem('nastya_quest_stage');
+        const savedArena = localStorage.getItem('arenaSelected');
+        if(savedArena === 'true') arenaSelected = true;
+        else if(savedArena === 'false') arenaSelected = false;
+        else arenaSelected = false;
+
+        if(savedStage !== null) {
+            let stageNum = parseInt(savedStage);
+            if(!isNaN(stageNum) && stageNum >= 0 && stageNum <= 6) {
+                // дополнительная логика: если сохранён этап >0, но арена не выбрана, то сбрасываем на выбор, чтобы не ломать логику
+                if(stageNum >= 1 && !arenaSelected) {
+                    showStage(0);
                 } else {
-                    initStepsState();
+                    showStage(stageNum);
                 }
-            } catch(e) { initStepsState(); }
-        } else {
-            initStepsState();
-        }
-        const savedFinal = localStorage.getItem('nastya_final_revealed');
-        if (savedFinal === 'true') finalRevealed = true;
-        else finalRevealed = false;
-    }
-
-    // Отобразить все шаги в соответствии с unlockedSteps
-    function renderSteps() {
-        const container = document.getElementById('questArea');
-        if (!container) return;
-        container.innerHTML = '';
-        stepElements = [];
-
-        for (let i = 0; i < stepsData.length; i++) {
-            const step = stepsData[i];
-            const isVisible = unlockedSteps[i];
-            const stepDiv = document.createElement('div');
-            stepDiv.className = 'step';
-            if (!isVisible) stepDiv.classList.add('step-hidden');
-
-            // Определяем, был ли этот шаг уже пройден (правильный ответ введён)
-            // Для этого проверим localStorage отдельно по каждому шагу: запомним решённые шаги
-            const isStepCompleted = localStorage.getItem(`step_${i}_completed`) === 'true';
-
-            // Содержимое шага
-            stepDiv.innerHTML = `
-                <div class="step-title">
-                    <span class="step-emoji">${step.emoji}</span>
-                    <span>${step.title}</span>
-                    ${isStepCompleted ? '<span class="step-complete-badge">✅ выполнено</span>' : ''}
-                </div>
-                <div class="question">❓ ${step.question}</div>
-                <div class="input-group">
-                    <input type="text" class="answer-field" id="input_step_${i}" placeholder="Введи ответ, найденный в реальной жизни..." ${isStepCompleted ? 'disabled' : ''}>
-                    <button class="check-step-btn" id="btn_step_${i}" ${isStepCompleted ? 'disabled' : ''}>${isStepCompleted ? '✅ открыто' : '🔍 проверить'}</button>
-                </div>
-                <div id="hint_step_${i}" class="hint-place ${localStorage.getItem(`hint_unlocked_${i}`) === 'true' ? 'unlocked-hint' : 'locked-hint'}">
-                    ${localStorage.getItem(`hint_unlocked_${i}`) === 'true' ? `🔓 ${step.hintUnlocked}` : `🔒 ${step.hintLocked}`}
-                </div>
-            `;
-            container.appendChild(stepDiv);
-            stepElements.push(stepDiv);
-
-            // Привязываем события, если шаг не завершён и видим
-            if (!isStepCompleted && isVisible) {
-                const inputField = document.getElementById(`input_step_${i}`);
-                const checkBtn = document.getElementById(`btn_step_${i}`);
-                if (checkBtn && inputField) {
-                    const handler = () => {
-                        verifyAnswer(i, inputField, checkBtn);
-                    };
-                    checkBtn.addEventListener('click', handler);
-                    inputField.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            verifyAnswer(i, inputField, checkBtn);
-                        }
-                    });
-                }
-            } else if (isStepCompleted) {
-                // Если шаг уже завершён, заблокируем и покажем подсказку разблокированной, если нужно
-                const hintDiv = document.getElementById(`hint_step_${i}`);
-                if (hintDiv && localStorage.getItem(`hint_unlocked_${i}`) === 'true') {
-                    hintDiv.classList.add('unlocked-hint');
-                    hintDiv.classList.remove('locked-hint');
-                    hintDiv.innerHTML = `🔓 ${stepsData[i].hintUnlocked}`;
-                }
+                return;
             }
         }
-        // После рендера проверим, можно ли открыть финал
-        checkAndShowFinal();
+        // По умолчанию: этап выбора
+        showStage(0);
     }
 
-    // Функция проверки ответа для конкретного шага
-    function verifyAnswer(stepIndex, inputElement, buttonElement) {
-        const step = stepsData[stepIndex];
-        const userAnswer = inputElement.value.trim().toLowerCase();
-        const correct = step.correctAnswer.toLowerCase();
+    // Небольшой эффект для кнопок (визуал)
+    const allBtns = document.querySelectorAll('button');
+    allBtns.forEach(btn => {
+        btn.addEventListener('touchstart', function() {});
+    });
 
-        if (userAnswer === correct) {
-            // Ответ правильный!
-            // Если подсказка для этого шага ещё не разблокирована в сторадже
-            const hintUnlockedKey = `hint_unlocked_${stepIndex}`;
-            const isHintAlready = localStorage.getItem(hintUnlockedKey) === 'true';
-            if (!isHintAlready) {
-                // Сохраняем, что подсказка открыта
-                localStorage.setItem(hintUnlockedKey, 'true');
-                // Обновляем отображение подсказки в реальном времени
-                const hintDiv = document.getElementById(`hint_step_${stepIndex}`);
-                if (hintDiv) {
-                    hintDiv.innerHTML = `🔓 ${step.hintUnlocked}`;
-                    hintDiv.classList.add('unlocked-hint');
-                    hintDiv.classList.remove('locked-hint');
-                }
-                // Показываем уведомление
-                showToast(`🎉 Верно, Настя! Подсказка шага ${stepIndex+1} открыта!`);
-            }
-
-            // Отмечаем шаг как пройденный (completed)
-            const completedKey = `step_${stepIndex}_completed`;
-            if (localStorage.getItem(completedKey) !== 'true') {
-                localStorage.setItem(completedKey, 'true');
-                // Меняем внешний вид кнопки и поля
-                if (inputElement) inputElement.disabled = true;
-                if (buttonElement) {
-                    buttonElement.textContent = '✅ Открыто!';
-                    buttonElement.disabled = true;
-                }
-                // Добавляем бейдж "выполнено"
-                const stepDiv = stepElements[stepIndex];
-                if (stepDiv) {
-                    const titleDiv = stepDiv.querySelector('.step-title');
-                    if (titleDiv && !titleDiv.querySelector('.step-complete-badge')) {
-                        const badge = document.createElement('span');
-                        badge.className = 'step-complete-badge';
-                        badge.textContent = '✅ выполнено';
-                        titleDiv.appendChild(badge);
-                    }
-                }
-
-                // Разблокируем СЛЕДУЮЩИЙ шаг (если есть)
-                if (stepIndex + 1 < stepsData.length && !unlockedSteps[stepIndex + 1]) {
-                    unlockedSteps[stepIndex + 1] = true;
-                    saveProgress();
-                    // Перерисовываем, чтобы показать новый шаг
-                    renderSteps();
-                    // Прокрутим к новому появившемуся шагу (небольшой эффект)
-                    setTimeout(() => {
-                        const nextStepDiv = stepElements[stepIndex + 1];
-                        if (nextStepDiv) {
-                            nextStepDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            nextStepDiv.style.transform = 'scale(1.01)';
-                            setTimeout(() => { if(nextStepDiv) nextStepDiv.style.transform = ''; }, 400);
-                        }
-                    }, 100);
-                    showToast(`✨ Новый вопрос разблокирован! Вперёд за подсказкой! ✨`);
-                } else {
-                    // Если это был последний шаг, то после его завершения проверим финал
-                    saveProgress();
-                    renderSteps(); // обновить статусы
-                }
-                // Проверяем, все ли шаги выполнены, и показываем финальное поздравление
-                checkAndShowFinal();
-            }
-        } else {
-            // Неправильный ответ
-            showToast(`❌ Не угадала, Настюш. Попробуй ещё раз! (Ищи ответ в реале ❤️)`);
-            inputElement.classList.add('error-shake');
-            setTimeout(() => {
-                inputElement.classList.remove('error-shake');
-            }, 400);
-        }
-    }
-
-    // Проверка: все ли шаги выполнены (все step_i_completed === true)
-    function areAllStepsCompleted() {
-        for (let i = 0; i < stepsData.length; i++) {
-            if (localStorage.getItem(`step_${i}_completed`) !== 'true') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // Показать финальное поздравление, если все шаги пройдены
-    function checkAndShowFinal() {
-        const allCompleted = areAllStepsCompleted();
-        const finalDiv = document.getElementById('finalCongrats');
-        if (allCompleted && !finalRevealed) {
-            finalRevealed = true;
-            saveProgress();
-            if (finalDiv) {
-                finalDiv.classList.remove('final-hidden');
-                finalDiv.classList.add('final-visible');
-                // запустим конфетти
-                launchConfetti();
-                showToast("🎊 ПОЗДРАВЛЯЮ! Ты прошла весь квест! 🎊");
-            }
-        } else if (!allCompleted && finalDiv && finalRevealed === false) {
-            if (finalDiv.classList.contains('final-visible')) {
-                finalDiv.classList.add('final-hidden');
-                finalDiv.classList.remove('final-visible');
-            }
-        }
-    }
-
-    // Конфетти эффект
-    function launchConfetti() {
-        for (let i = 0; i < 120; i++) {
-            const conf = document.createElement('div');
-            conf.classList.add('confetti');
-            conf.style.left = Math.random() * window.innerWidth + 'px';
-            conf.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 65%)`;
-            conf.style.width = Math.random() * 10 + 4 + 'px';
-            conf.style.height = Math.random() * 12 + 6 + 'px';
-            conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-            document.body.appendChild(conf);
-            const duration = 800 + Math.random() * 800;
-            const destination = window.innerHeight + 50;
-            const rotate = Math.random() * 360;
-            conf.animate([
-                { transform: `translateY(0px) rotate(0deg)`, opacity: 1 },
-                { transform: `translateY(${destination}px) rotate(${rotate}deg)`, opacity: 0 }
-            ], {
-                duration: duration,
-                easing: 'cubic-bezier(0.3, 0.8, 0.6, 1)',
-                fill: 'forwards'
-            });
-            setTimeout(() => { if(conf && conf.remove) conf.remove(); }, duration + 200);
-        }
-    }
-
-    // Тосты
-    function showToast(message) {
-        let toast = document.getElementById('dynamic-toast-nastya');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'dynamic-toast-nastya';
-            toast.style.position = 'fixed';
-            toast.style.bottom = '30px';
-            toast.style.left = '50%';
-            toast.style.transform = 'translateX(-50%)';
-            toast.style.backgroundColor = '#2c3e2f';
-            toast.style.color = '#fff5e6';
-            toast.style.padding = '12px 24px';
-            toast.style.borderRadius = '50px';
-            toast.style.fontWeight = 'bold';
-            toast.style.zIndex = '9999';
-            toast.style.fontSize = '0.95rem';
-            toast.style.boxShadow = '0 8px 20px rgba(0,0,0,0.2)';
-            toast.style.fontFamily = 'system-ui';
-            toast.style.whiteSpace = 'nowrap';
-            toast.style.backdropFilter = 'blur(8px)';
-            document.body.appendChild(toast);
-        }
-        toast.textContent = message;
-        toast.style.opacity = '1';
-        setTimeout(() => {
-            toast.style.opacity = '0';
-        }, 2500);
-    }
-
-    // Добавляем стиль тряски
-    const styleShake = document.createElement('style');
-    styleShake.textContent = `
-        .error-shake {
-            animation: shakeBox 0.3s ease-in-out 0s 2;
-            border-color: #e76f51 !important;
-        }
-        @keyframes shakeBox {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-    `;
-    document.head.appendChild(styleShake);
-
-    // Инициализация и запуск
     loadProgress();
-    renderSteps();
-    // Если финал уже должен быть виден после загрузки
-    if (areAllStepsCompleted() && !finalRevealed) {
-        finalRevealed = true;
-        saveProgress();
-        const finalDiv = document.getElementById('finalCongrats');
-        if (finalDiv) {
-            finalDiv.classList.remove('final-hidden');
-            finalDiv.classList.add('final-visible');
-            launchConfetti();
-        }
-    } else if (areAllStepsCompleted() && finalRevealed) {
-        const finalDiv = document.getElementById('finalCongrats');
-        if (finalDiv && finalDiv.classList.contains('final-hidden')) {
-            finalDiv.classList.remove('final-hidden');
-            finalDiv.classList.add('final-visible');
-        }
-    }
+
+    // Если вдруг на этапе 2 или 5 введены правильные ответы после перезагрузки, но этап не продвинут? но мы сохраняем только этапы, 
+    // и прогресс ввода не храним специально, чтобы Настя каждый раз вводила заново (честное прохождение).
+    // Доп. защита: если текущий этап 5 или 2 и мы загрузили, просто показываем поля для ввода
 </script>
 </body>
 </html>
